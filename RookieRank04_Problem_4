@@ -1,0 +1,64 @@
+// code_report Solution
+// 
+
+// First Solution <- THIS WILL TLE
+
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int winningHands (int m, int x, vector<int> a) {
+
+	int n = a.size (), ans = 0;
+
+	for (int i = 1; i <= n; i++) {
+
+		string bitmask (i, 1); // K leading 1's
+		bitmask.resize (n, 0); // N-K trailing 0's
+
+		do {
+
+			long long res = 1;
+			for (int j = 0; j < n; j++) if (bitmask[j]) { res *= a[j]; res %= m; }
+			if (res == x) ans++;
+
+		} while (prev_permutation (bitmask.begin (), bitmask.end ()));
+	}
+
+	return ans;
+}
+
+// Second solution <- THIS WILL PASS (NOT TLE
+
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+using ll = long long;
+
+ll winningHands (int m, int n, int x, vector <int> a) {
+
+	int state = 0;
+
+	vector<vector<int>> dp (2, vector<int> (m));
+
+	for (int i = 0; i < n; i++) {
+
+		// copy one state to another
+		dp[state] = dp[state ^ 1]; 
+
+		// double the count of "modulus groups" for the new element a[i]
+		for (int j = 0; j < m; j++) dp[state][((ll) j*a[i]) % m] += dp[state ^ 1][j]; 
+
+		dp[state][a[i] % m]++;
+
+		state ^= 1;
+	}
+
+	return dp[state ^ 1][x];
+}
