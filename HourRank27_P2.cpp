@@ -12,16 +12,12 @@ using ll = long long;
 
 const ll MIN = numeric_limits<ll>::min ();
 
-multiset<ll>::iterator first_less_than (const multiset<ll>& ms, ll val) {
+template<typename T>
+auto first_less_than (const T& ms, ll val) {
 	auto it = ms.lower_bound (val);
 	if (it == ms.end ()) --it;
 	while (it != ms.begin () && *it >= val) --it;
 	return *it >= val ? ms.end () : it;
-}
-
-void single_erase (multiset<ll>& ms, ll val) {
-	auto it = ms.find (val);
-	ms.erase (it);
 }
 
 ll calc (ll a, ll b, ll c) {
@@ -29,16 +25,17 @@ ll calc (ll a, ll b, ll c) {
 	return (a < b && b < c) ? a * b * c : MIN;
 }
 
-ll maximumProfit (const vector<ll>& v) 
+ll maximumProfit (const vector<ll>& profits) 
 {
-	multiset<ll> right (v.begin (), v.end ()), left;
+	multiset<ll> right (profits.begin (), profits.end ());
+	set<ll> left;
 
 	ll res = MIN;
 
-	for (int i = 0; i < v.size (); ++i)
+	for (ll b : profits)
 	{
-		ll a1, a2, c1, c2, b = v[i];
-		single_erase (right, b);
+		ll a1, a2, c1, c2;
+		right.erase (right.find (b));
 
 		if (!right.empty () && !left.empty ())
 		{
@@ -72,3 +69,4 @@ int main ()
 
 	return 0;
 }
+
