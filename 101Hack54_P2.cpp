@@ -16,7 +16,7 @@ ld time_to_end (ld pos, ld stop, ld last_stop, ld v, ld t, ld w, ld s)
    ld walk_time           = abs (pos - stop) / s;
    ld time_arrive_at_stop = t + walk_time;
    ld bus_arrival_offset  = stop / v;
-   ld bus_number          = ceil ((time_arrive_at_stop - bus_arrival_offset) / w);
+   ld bus_number          = max ((ld) 0, ceil ((time_arrive_at_stop - bus_arrival_offset) / w));
    ld time_get_on_bus     = bus_number * w + bus_arrival_offset;
    ld time_on_bus         = (last_stop - stop) / v;
    
