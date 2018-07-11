@@ -3,7 +3,19 @@
 
 // Original solution
 
-long fewestTowers (vector<int> xs, vector<int> ys) 
+#include <string>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <vector>
+#include <set>
+#include <functional>
+#include <numeric>
+#include <type_traits>
+
+using namespace std;
+
+long fewestTowers (std::vector<int> xs, std::vector<int> ys)
 {
    map<int, set<int>> xy;
    int n = xs.size ();
@@ -22,13 +34,13 @@ long fewestTowers (vector<int> xs, vector<int> ys)
       t.push_back (*col.second.rbegin ());
    }
 
-   auto max_t = *max_element (t.begin (), t.end ());
-   auto min_b = *min_element (b.begin (), b.end ());
+   auto j = distance (b.begin (), min_element (b.begin (), b.end ()));
+   auto k = distance (t.begin (), max_element (t.begin (), t.end ()));
 
-   for (int i = 1;   b[i - 1] != min_b; ++i) b[i] = min (b[i], b[i - 1]);
-   for (int i = 1;   t[i - 1] != max_t; ++i) t[i] = max (t[i], t[i - 1]);
-   for (int i = c-2; b[i + 1] != min_b; --i) b[i] = min (b[i], b[i + 1]);
-   for (int i = c-2; t[i + 1] != max_t; --i) t[i] = max (t[i], t[i + 1]);
+   for (int i = 1;   i <= j; ++i) b[i] = min (b[i], b[i - 1]);
+   for (int i = 1;   i <= k; ++i) t[i] = max (t[i], t[i - 1]);
+   for (int i = c-2; i >= j; --i) b[i] = min (b[i], b[i + 1]);
+   for (int i = c-2; i >= k; --i) t[i] = max (t[i], t[i + 1]);
    
    long ans = -n;
    for (auto i = 0; i < c; ++i) ans += t[i] - b[i] + 1; // could be transform
@@ -38,11 +50,7 @@ long fewestTowers (vector<int> xs, vector<int> ys)
 
 // Modern solution
 
-
 template <typename I, typename P, typename F>
-// requires ForwardIterator<I> &&
-//          StrictWeakOrdering<P> &&
-//          RangeFunction<F>
 F group_equal (I f, I l, P p, F action) {
    while (f != l) {
       I cur_end = std::upper_bound (f, l, *f, p);
@@ -52,37 +60,30 @@ F group_equal (I f, I l, P p, F action) {
    return action;
 }
 
-template <typename P>
-void set_perimeter (std::vector<int> &v, P p) {
-   auto limit = *min_element (v.begin (), v.end (), p);
-   for (int i = 1;             v[i - 1] != limit; ++i) if (p (v[i - 1], v[i])) v[i] = v[i - 1];
-   for (int i = v.size () - 2; v[i + 1] != limit; --i) if (p (v[i + 1], v[i])) v[i] = v[i + 1];
-}
-
 template <typename I, typename P>
-void set_perimeter2 (I f, I l, P p) {
-   ++f, --(--l);
-   auto limit = *min_element (v.begin (), v.end (), p);
-   while (*f != limit) v[i] = p (v[i - 1], v[i]) ? v[i - 1] : v[i], ++f;
-   while (*l != limit) v[i] = p (v[i + 1], v[i]) ? v[i + 1] : v[i], --l;
+void set_perimeter (I f, I l, P p) {
+   using rev  = std::reverse_iterator<I>;
+   auto limit = min_element (f, l, p);
+   auto min_p = [p](const auto& x, const auto& y) { return p (x, y) ? x : y; };
+   std::partial_sum (f, limit, f, min_p);
+   std::partial_sum (rev (l), rev (limit), rev (l), min_p);
 }
 
-long fewestTowers2 (std::vector<int> xs, std::vector<int> ys)
+long fewestTowers (std::vector<int> xs, std::vector<int> ys)
 {
    std::vector<std::pair<int, int>> dots (xs.size ());
    std::transform (xs.begin (), xs.end (), ys.begin (), dots.begin (), [](int x, int y) { return std::make_pair (x, y); });
    std::sort (dots.begin (), dots.end ());
 
    std::vector<int> t, b; // top, bottom
-   group_equal (dots.begin (), dots.end (), 
-      [](const auto& dot1, const auto& dot2) { return dot1.first < dot2.first; },
+   group_equal (dots.begin (), dots.end (), [](const auto& dot1, const auto& dot2) { return dot1.first < dot2.first; },
       [&](auto f, auto l) mutable { b.push_back (f->second); t.push_back ((--l)->second); });
 
-   set_perimeter (b, std::less<>    ());
-   set_perimeter (t, std::greater<> ());
+   set_perimeter (b.begin (), b.end (), std::less<>    ());
+   set_perimeter (t.begin (), t.end (), std::greater<> ());
 
-   std::vector<int> diff (t.size ());
-   std::transform (t.begin (), t.end (), b.begin (), diff.begin (), std::minus<> ());
-   
-   return std::accumulate (diff.begin (), diff.end (), 0) + t.size () - xs.size ();
+   long ans = - (int) xs.size ();
+   for (auto i = 0; i < t.size (); ++i) ans += t[i] - b[i] + 1;
+
+   return ans;
 }
