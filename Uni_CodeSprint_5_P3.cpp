@@ -26,7 +26,7 @@ auto create_adjacency_list (int n, const vvi &edges) {
 auto determine_components (int n, const vvi &al) {
    vi c (n, -1);
    for (int i = 0; i < n; ++i) 
-      int j = dfs (al, c, i, i);
+      dfs (al, c, i, i);
    return c;
 }
 
