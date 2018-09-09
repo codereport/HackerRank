@@ -47,3 +47,18 @@ auto find_min_max_edges (int n, const vvi &al, const vi &c) {
 
    return m;
 }
+
+int solve (int n, vvi edges, int a, int b)
+{
+   auto al = create_adjacency_list (n, edges);
+   auto c  = determine_components  (n, al);
+   auto m  = find_min_max_edges    (n, al, c);
+
+   auto criteria = [&, i = 0] (const auto& edges) mutable {
+      auto v_e = edges.size ();
+      auto p   = m[c[i]]; i++; 
+      return (a * p.second < v_e && v_e < b * p.first);
+   };
+
+   return count_if (al.begin (), al.end (), criteria);
+}
