@@ -15,7 +15,8 @@ int dfs (const vvi& al, vi& c, int i, int group) {
 auto create_adjacency_list (int n, const vvi &edges) {
    vvi al (n);
    for (const auto& e : edges) {
-      int x = e[0] - 1, y = e[1] - 1;
+      int x = e[0] - 1;
+      int y = e[1] - 1;
       al[x].push_back (y);
       al[y].push_back (x);
    }
@@ -39,25 +40,10 @@ auto find_min_max_edges (int n, const vvi &al, const vi &c) {
 
    // find min and max edges for each component
    for (int i = 0; i < n; i++) {
-      auto& p = m[c[i]];
-      p.first = max (p.first, (ll)al[i].size ());
+      auto& p  = m[c[i]];
+      p.first  = max (p.first, (ll)al[i].size ());
       p.second = min (p.second, (ll)al[i].size ());
    }
 
    return m;
-}
-
-int solve (int n, vvi edges, int a, int b)
-{
-   auto al = create_adjacency_list (n, edges);
-   auto c  = determine_components  (n, al);
-   auto m  = find_min_max_edges    (n, al, c);
-
-   auto criteria = [&, i = 0] (const auto& edges) mutable {
-      auto v_e = edges.size ();
-      auto p = m[c[i]]; i++; 
-      return (a * p.second < v_e && v_e < b * p.first);
-   };
-
-   return count_if (al.begin (), al.end (), criteria);
 }
