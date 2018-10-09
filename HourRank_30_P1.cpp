@@ -1,6 +1,8 @@
 // code_report Solution
 // https://youtu.be/uOG3QyxIjso
 
+// Solution 1:
+
 vector<string> solve (vector<string> names) {
    unordered_set<string> s;
    unordered_map<string, int> m;
@@ -27,4 +29,34 @@ vector<string> solve (vector<string> names) {
       }
    }
    return ans;
+}
+
+// Solution 2 (Trie):
+
+struct trie { 
+   unordered_map<char, trie*> m; 
+   int count = 0;
+};
+
+vector<string> solve(vector<string> names) {
+   auto* t = new trie();
+   vector<string> res;
+   for (const auto& name : names) {
+      auto* node = t;
+      auto added = false;
+      auto p = ""s;
+      for (auto c : name) {
+         p += c; // prefix
+         if (!node->m.count(c)) {
+            if (!added) res.push_back(p), added = true;
+            node->m[c] = new trie();
+         }
+         node = node->m[c];
+      }
+      node->count++;
+
+      if (!added)
+         res.push_back(p + (node->count != 1 ? " " + to_string(node->count) : ""));
+   }
+   return res;
 }
