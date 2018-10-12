@@ -42,9 +42,7 @@ def solve(names):
                     res.append(name[:i])
                     printed = True
                 node[x] = defaultdict(int)
-
             node = node[x]
-
         node['count'] += 1
 
         if not printed: 
