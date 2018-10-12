@@ -1,7 +1,7 @@
 # code_report Solution
-# https://youtu.be/uOG3QyxIjso
 
 # Solution 1:
+# https://youtu.be/uOG3QyxIjso
 
 import defaultdict from collections
 
@@ -27,7 +27,8 @@ def solve(names):
                 l.append(name)
     return l
 
-#Solution 2: 
+# Solution 2: 
+# https://youtu.be/VsiP-dTWyG4?t=249
 
 def solve(names):
     trie = {}
