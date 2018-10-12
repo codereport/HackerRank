@@ -1,7 +1,7 @@
 // code_report Solution
-// https://youtu.be/uOG3QyxIjso
 
 // Solution 1:
+// https://youtu.be/uOG3QyxIjso
 
 vector<string> solve (vector<string> names) {
    unordered_set<string> s;
@@ -32,6 +32,7 @@ vector<string> solve (vector<string> names) {
 }
 
 // Solution 2 (Trie):
+// https://youtu.be/VsiP-dTWyG4?t=249
 
 struct trie { 
    unordered_map<char, trie*> m; 
