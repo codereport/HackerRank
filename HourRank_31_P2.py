@@ -1,5 +1,5 @@
 # code_report Solution
-# 
+# https://youtu.be/E6_-mvn8xIw
 
 def avg(a, b):
     return (sum(a)+b)/len(a)
