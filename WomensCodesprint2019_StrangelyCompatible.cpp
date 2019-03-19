@@ -1,5 +1,5 @@
 // code_report Solution
-// Video Link:
+// Video Link: https://youtu.be/BxSRoYSNkgM
 // Problem Link: https://www.hackerrank.com/contests/hackerrank-all-womens-codesprint-2019/challenges/strangely-compatible
 
 #include <unordered_map>
