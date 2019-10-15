@@ -3,7 +3,7 @@
 # Solution 1:
 # https://youtu.be/uOG3QyxIjso
 
-import defaultdict from collections
+from collections import defaultdict 
 
 def solve(names):
     s = set()
